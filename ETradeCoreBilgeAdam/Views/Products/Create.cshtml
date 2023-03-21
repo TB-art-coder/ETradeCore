@@ -1,0 +1,143 @@
+﻿@model DataAccess.Entities.Product
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-12">
+        @*<form asp-action="Create" enctype="multipart/form-data">*@
+        <!--<form action="/Products/Create"> method="post>-->
+        @*@using (Html.BeginForm("Create","Products", FormMethod.Post))*@
+        @*@using (Html.BeginForm("Create"))*@
+        @using (Html.BeginForm("Create", "Products", FormMethod.Post, new { enctype = "multipart/form-data" }))@* *** *@
+        {
+            @Html.AntiForgeryToken()
+
+            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+            @Html.ValidationSummary(false, null, new { @class = "text-danger" })
+
+            <div class="row mb-3">
+
+                @*<label class="col-2 col-form-label">Product Name</label>*@
+
+                @*<label asp-for="Name" class="col-2 col-form-label"></label>*@
+                @*@Html.Label("Product Name")*@
+                @Html.LabelFor(m => m.Name, null, new { @class= "col-2 col-form-label" })
+
+                <div class="col-5">
+
+                    @*<input asp-for="Name" class="form-control" />*@
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+
+                    @*<span asp-validation-for="Name" class="text-danger"></span>*@
+                    @Html.ValidationMessageFor(m => m.Name, null, new { @class = "text-danger" })
+
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="Description" class="col-2 col-form-label"></label>
+                <div class="col-5">
+
+                    @*<textarea asp-for="Description" class="form-control" rows="4"></textarea>*@
+                    @Html.TextAreaFor(m => m.Description, new { rows = "4", @class = "form-control" })
+
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="StockAmount" class="col-2 col-form-label"></label>
+                <div class="col-5">
+
+                    <input asp-for="StockAmount" class="form-control" />
+                    @*@Html.EditorFor(m => m.StockAmount)*@
+
+                    <span asp-validation-for="StockAmount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="UnitPrice" class="col-2 col-form-label"></label>
+                <div class="col-5">
+                    <input asp-for="UnitPrice" class="form-control" />
+                    <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="ExpirationDate" class="col-2 col-form-label"></label>
+                <div class="col-5">
+                    <input asp-for="ExpirationDate" class="form-control" type="text" id="datepicker" />
+                    <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label asp-for="CategoryId" class="col-2 col-form-label"></label>
+                <div class="col-5">
+
+                    @*<select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId" id="select">
+                <option value="">-- Select --</option>
+                </select>*@
+                    @Html.DropDownListFor(m => m.CategoryId, (ViewBag.CategoryId as SelectList), "-- Select --", new { @class = "form-control", id = "select" })
+
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="ShopIds" class="col-2 col-form-label"></label>
+                <div class="col-5">
+                   @* <select multiple asp-for="ShopIds" class="form-control" id="multiselect" asp-items="ViewBag.ShopIds">
+
+                    </select>*@
+                    @Html.ListBoxFor(m => m.ShopIds, (ViewBag.ShopIds as MultiSelectList), new { @class = "form-control", id = "multiselect" })
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="Image" class="col-2 col-form-label"></label>
+                <div class="col-5">
+                    <input type="file" class="form-control" name="productImage" /><!-- *** -->
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="offset-2 col-5">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    &nbsp;&nbsp;
+                    <button type="reset" class="btn btn-outline-primary">Reset</button>
+                    &nbsp;&nbsp;
+                    <a asp-action="Index">Back to List</a>
+                    @*<a asp-action="Index" asp-controller="Home">Back to Home</a>*@
+                </div>
+            </div>
+            @*</form>*@
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <link href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    @*<script src="~/lib/bootstrap-datepicker/locales/bootstrap-datepicker.tr.min.js"></script>*@
+    <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    @*<script src="~/lib/select2/js/i18n/tr.min.js"></script>*@
+
+    <script>
+        $(function() {
+            $('#datepicker').datepicker({
+                //language: "tr",
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            $("#select").select2();
+            $("#multiselect").select2();
+        });
+    </script>
+}
+
+

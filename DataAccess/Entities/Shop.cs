@@ -1,0 +1,28 @@
+﻿using AppCore8137.Records.Bases;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DataAccess.Entities
+{
+    
+    public partial class Shop : Record
+    {
+        [Required(ErrorMessage = "{0} is required!")]
+        [StringLength(150, ErrorMessage = "{0} must be maximum {1} characters!")]
+        [DisplayName("Shop Name")]
+        public string? Name { get; set; }
+
+        [DisplayName("Virtual")]
+        public bool IsVirtual { get; set; }
+
+        public List<ProductShop>? ProductShops { get; set; }
+    }
+
+    public partial class Shop
+    {
+        [NotMapped]
+        [DisplayName("Virtual")]
+        public string? IsVirtualDisplay { get; set; }
+    }
+}

@@ -1,0 +1,103 @@
+﻿@using DataAccess.Enums
+@model AccountRegisterModel
+
+@{
+    ViewData["Title"] = "Register";
+    //Layout = "_Layout";
+}
+
+<h1>Register</h1>
+
+<h4>User</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Register">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sex" class="control-label"></label>
+                <input type="radio" asp-for="Sex" value="@((int)Sex.Female)" checked /> @Sex.Female
+                &nbsp;
+                <input type="radio" asp-for="Sex" value="@((int)Sex.Male)" /> @Sex.Male
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <textarea asp-for="Address" class="form-control"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CountryId" class="control-label"></label>
+                <select asp-for="CountryId" class="form-control" asp-items="ViewBag.Countries" id="countryselect">
+                    <option value="">-- Select --</option>
+                </select>
+                <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CityId" class="control-label"></label>
+                <select asp-for="CityId" class="form-control cityselect" asp-items="ViewBag.Cities">
+                    <option value="">-- Select Country --</option>
+                </select>
+                <span asp-validation-for="CityId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Register" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script>
+        $(function() { // document.ready(function())
+            $("#countryselect").change(function() {
+                $(".cityselect").empty();
+                var selectedCountryId = $("#countryselect").val();
+                if (selectedCountryId != "") {
+                    $.ajax({
+                        cache: false,
+                        dataType: "json",
+                        //url: "/Cities/GetJson?countryId=" + selectedCountryId  
+                        url: "/Cities/GetJson",
+                        data: { countryId: selectedCountryId },
+                        type: "get",
+                        success: function(cities) {
+                            //alert(cities.length);
+                            console.log(cities);
+                            $(".cityselect").append('<option value="">-- Select City --</option>');
+                            for (var i = 0; i < cities.length; i++) {
+                                $(".cityselect").append('<option value="' + cities[i].id + '">' + cities[i].name + '</option>');
+                            }
+                        },
+                        error: function() {
+                            alert("An error occured during AJAX request!");
+                        }
+                    });
+                } else {
+                    $(".cityselect").append('<option value="">-- Select Country --</option>');
+                }
+            });
+        });
+    </script>
+}
